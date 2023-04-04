@@ -1,21 +1,15 @@
-import os
 import numpy as np
 print("\x1b[2J\x1b[1;1H") 
 
-os.chdir(r'E:\IFTM atual\2021-02\Inteligência Artificial\classificação de digitos\João Pedro - João Paulo - Renato - Thiago')
-
-
 # Lendo o arquivo de saídas esperadas (target)
-t=np.loadtxt('target.csv',delimiter=';',skiprows=0)
+t=np.loadtxt('data/targets10.csv',delimiter=';',skiprows=0)
 
 #os.chdir(r'E:\IFTM atual\2021-01\Inteligência Artificial\Trabalho 4 - classificação de dígitos MLP\Lucas Luan - Lucas Neto - Paulo Ricardo')
 #t=np.loadtxt('targest16.csv',delimiter=';',skiprows=0)
-vanterior=np.loadtxt('vnovo.csv')
-v0anterior=np.loadtxt('v0novo.csv')
-wanterior=np.loadtxt('wnovo.csv')
-w0anterior=np.loadtxt('w0novo.csv')
-
-
+vanterior=np.loadtxt('test/vnovo.csv', delimiter=';', skiprows=0)
+v0anterior=np.loadtxt('test/v0novo.csv', delimiter=';', skiprows=0)
+wanterior=np.loadtxt('test/wnovo.csv', delimiter=';', skiprows=0)
+w0anterior=np.loadtxt('test/w0novo.csv', delimiter=';', skiprows=0)
 
 
 (vent,neur)=np.shape(vanterior)
@@ -24,14 +18,12 @@ limiar=0
 zin=np.zeros((1,neur))
 target=np.zeros((vsai,1))
 
-os.chdir(r'E:\IFTM atual\2020-02\Inteligência Artificial\digitos')
-
 
 ###################### Limiarização
 
 
 #### Teste da rede
-aminicial=101
+aminicial=1
 amtestedigitos=35
 yteste=np.zeros((vsai,1))
 k2='_'
@@ -45,7 +37,7 @@ for m in range(10):
         k3a=n+aminicial
         k3=str(k3a)
         nome=k1+k2+k3+k4
-        xteste=np.loadtxt(nome)
+        xteste=np.loadtxt('data/'+nome)
         for m2 in range(vsai):
             for n2 in range(neur):
                 zin[0][n2]=np.dot(xteste,vanterior[:,n2])+v0anterior[n2][0]

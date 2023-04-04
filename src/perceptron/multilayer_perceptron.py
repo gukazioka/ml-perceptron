@@ -1,8 +1,19 @@
 import numpy as np
 import random as rd
+from glob import iglob
 
-ENTRADAS = 1
+ENTRADAS = 256
 
+def get_samples(sample_number: int, number: int) -> list:
+    samples_qtd = 0
+    samples = list()
+    for path in iglob(f'data/{number}_*.txt'):
+        samples_qtd += 1
+        if samples_qtd > sample_number:
+            break
+        with open(path, 'r') as file:
+            samples.append(np.array(list(filter(lambda x: x, file.read().split(' ')))))
+    return samples
 
 class MultilayerPerceptron:
 
@@ -10,35 +21,34 @@ class MultilayerPerceptron:
         self,
         neurons: int,
         alpha: float,
-        x_max: float,
-        x_min: float,
-        samples: int,
         tolerated_error: float,
-        var_erro: float,
-        var_ciclo: int,
     ) -> None:
         self.alpha = alpha
-        self.x_max = x_max
-        self.x_min = x_min
-        self.samples = samples
         self.neurons = neurons
         self.tolerated_error = tolerated_error
         self.listaciclo = []
         self.listaerro = []
-        self.var_erro = var_erro
-        self.var_ciclo = var_ciclo
+        self.vsai = 10
+        self.ampdigitos = 50
 
     def initialize(self):
-        x1 = np.linspace(self.x_min, self.x_max, self.samples)
-        x = np.zeros((self.samples, 1))
-        for i in range(self.samples):
-            x[i][0] = x1[i]
+        self.samples = self.ampdigitos * self.vsai
+        x = np.zeros((self.samples, ENTRADAS))
+        ordem = np.zeros(self.samples)
+
+        cont = 0
+        for m in range(self.vsai):
+            todas_amostras = get_samples(self.ampdigitos, m)
+
+            for entrada in todas_amostras:
+                x[cont,:] = entrada[:]
+                ordem[cont] = m
+                cont += 1
+        ordem = ordem.astype('int')
+
         (amostras, vsai) = np.shape(x)
 
-        t1 = (np.cos(2*x))*(np.sin(x/2))
-        t = np.zeros((1, amostras))
-        for i in range(amostras):
-            t[0][i] = t1[i]
+        t = np.loadtxt('data/targets10.csv', delimiter=';', skiprows=0)
         (vsai, amostras) = np.shape(t)
 
         vanterior = np.zeros((ENTRADAS, self.neurons))
@@ -119,19 +129,16 @@ class MultilayerPerceptron:
             self.listaciclo.append(ciclo)
             self.listaerro.append(errototal)
 
-            zin2 = np.zeros((1, self.neurons))
-            z2 = np.zeros((1, self.neurons))
-            t2 = np.zeros((amostras, 1))
+            print('Ciclo\t Erro')
+            print(ciclo, '\t', errototal)
+        
+        np.savetxt('test/vnovo.csv', vnovo, delimiter=';')
+        np.savetxt('test/v0novo.csv', v0novo, delimiter=';')
+        np.savetxt('test/wnovo.csv', wnovo, delimiter=';')
+        np.savetxt('test/w0novo.csv', w0novo, delimiter=';')
 
-            for i in range(amostras):
-                for j in range(self.neurons):
-                    zin2[0][j] = np.dot(
-                        x[i, :], vanterior[:, j]) + v0anterior[0][j]
-                    z2 = np.tanh(zin2)
-                yin2 = np.dot(z2, wanterior) + w0anterior
-                y2 = np.tanh(yin2)
 
-                t2[i][0] = y2
 
-            self.var_erro.set("{:.6f}".format((errototal)))
-            self.var_ciclo.set(ciclo)
+if __name__ == '__main__':
+    mlp = MultilayerPerceptron(200, 0.005, 0.05)
+    mlp.initialize()

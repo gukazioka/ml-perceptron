@@ -1,5 +1,4 @@
 from glob import iglob
-import os
 import numpy as np
 
 INPUT_DIR = 'data/*'

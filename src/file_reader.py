@@ -1,13 +1,13 @@
 from glob import iglob
 import numpy as np
 
-INPUT_DIR = 'data/*'
-
-def read_file():
-    for path in iglob(INPUT_DIR):
+def get_samples(sample_number: int, number: int) -> list:
+    samples_qtd = 0
+    samples = list()
+    for path in iglob(f'data/{number}_*.txt'):
+        samples_qtd += 1
+        if samples_qtd > sample_number:
+            break
         with open(path, 'r') as file:
-            sample = np.array(list(filter(lambda x: x, file.read().split(' '))))
-            print(sample)
-
-
-read_file()
+            samples.append(np.array(list(filter(lambda x: x, file.read().split(' ')))))
+    return samples

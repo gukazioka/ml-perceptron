@@ -29,7 +29,7 @@ class MultilayerPerceptron:
         self.listaciclo = []
         self.listaerro = []
         self.vsai = 10
-        self.ampdigitos = 50
+        self.ampdigitos = 60
 
     def initialize(self):
         self.samples = self.ampdigitos * self.vsai
@@ -38,35 +38,33 @@ class MultilayerPerceptron:
 
         cont = 0
         for m in range(self.vsai):
-            todas_amostras = get_samples(self.ampdigitos, m)
-
-            for entrada in todas_amostras:
+            for n in range(self.ampdigitos):
+                entrada = np.loadtxt(f'data/{m}_{n + 1}.txt')
                 x[cont,:] = entrada[:]
                 ordem[cont] = m
                 cont += 1
         ordem = ordem.astype('int')
-
-        (amostras, vsai) = np.shape(x)
 
         t = np.loadtxt('data/targets10.csv', delimiter=';', skiprows=0)
         (vsai, amostras) = np.shape(t)
 
         vanterior = np.zeros((ENTRADAS, self.neurons))
 
+        ALEATORIO = 0.2
         for i in range(ENTRADAS):
             for j in range(self.neurons):
-                vanterior[i][j] = rd.uniform(-1, 1)
+                vanterior[i][j] = rd.uniform(-ALEATORIO, ALEATORIO)
         v0anterior = np.zeros((1, self.neurons))
         for j in range(self.neurons):
-            v0anterior[0][j] = rd.uniform(-1, 1)
+            v0anterior[0][j] = rd.uniform(-ALEATORIO, ALEATORIO)
 
         wanterior = np.zeros((self.neurons, vsai))
         for i in range(self.neurons):
             for j in range(vsai):
-                wanterior[i][j] = rd.uniform(-0.2, 0.2)
+                wanterior[i][j] = rd.uniform(-ALEATORIO, ALEATORIO)
         w0anterior = np.zeros((1, vsai))
         for j in range(vsai):
-            w0anterior = np.zeros((1, vsai))
+            w0anterior = rd.uniform(-ALEATORIO, ALEATORIO)
 
         vnovo = np.zeros((ENTRADAS, self.neurons))
         v0novo = np.zeros((1, self.neurons))
@@ -97,7 +95,7 @@ class MultilayerPerceptron:
                 for m in range(vsai):
                     h[m][0] = y[0][m]
                 for m in range(vsai):
-                    target[m][0] = t[0][ordem[padrao]]
+                    target[m][0] = t[m][ordem[padrao]]
 
                 errototal = errototal + np.sum(0.5*((target-h)**2))
 
@@ -140,5 +138,5 @@ class MultilayerPerceptron:
 
 
 if __name__ == '__main__':
-    mlp = MultilayerPerceptron(200, 0.005, 0.05)
+    mlp = MultilayerPerceptron(200, 0.005, 0.5)
     mlp.initialize()

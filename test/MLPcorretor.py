@@ -23,8 +23,8 @@ target=np.zeros((vsai,1))
 
 
 #### Teste da rede
-aminicial=1
-amtestedigitos=35
+aminicial=81
+amtestedigitos=10
 yteste=np.zeros((vsai,1))
 k2='_'
 k4='.txt'

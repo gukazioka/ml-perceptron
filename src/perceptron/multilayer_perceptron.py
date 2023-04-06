@@ -29,7 +29,7 @@ class MultilayerPerceptron:
         self.listaciclo = []
         self.listaerro = []
         self.vsai = 10
-        self.ampdigitos = 60
+        self.ampdigitos = 80
 
     def initialize(self):
         self.samples = self.ampdigitos * self.vsai
@@ -42,7 +42,7 @@ class MultilayerPerceptron:
                 entrada = np.loadtxt(f'data/{m}_{n + 1}.txt')
                 x[cont,:] = entrada[:]
                 ordem[cont] = m
-                cont += 1
+                cont = cont + 1
         ordem = ordem.astype('int')
 
         t = np.loadtxt('data/targets10.csv', delimiter=';', skiprows=0)
@@ -86,8 +86,7 @@ class MultilayerPerceptron:
             errototal = 0
             for padrao in range(amostras):
                 for j in range(self.neurons):
-                    zin[0][j] = np.dot(
-                        x[padrao, :], vanterior[:, j]) + v0anterior[0][j]
+                    zin[0][j] = np.dot(x[padrao, :], vanterior[:, j]) + v0anterior[0][j]
                 z = np.tanh(zin)
                 yin = np.dot(z, wanterior) + w0anterior
                 y = np.tanh(yin)
@@ -138,5 +137,6 @@ class MultilayerPerceptron:
 
 
 if __name__ == '__main__':
-    mlp = MultilayerPerceptron(200, 0.005, 0.5)
+    mlp = MultilayerPerceptron(20, 0.005, 0.001)
+    # mlp = MultilayerPerceptron(25, 0.005, 0.0001)
     mlp.initialize()

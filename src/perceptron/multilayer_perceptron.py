@@ -137,6 +137,6 @@ class MultilayerPerceptron:
 
 
 if __name__ == '__main__':
-    mlp = MultilayerPerceptron(20, 0.005, 0.001)
+    mlp = MultilayerPerceptron(20, 0.05, 0.001)
     # mlp = MultilayerPerceptron(25, 0.005, 0.0001)
     mlp.initialize()
